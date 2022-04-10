@@ -43,7 +43,7 @@ export const converToSummarizedText = async (link) => {
   const info = await ytdl.getInfo(link, { quality: 'highestaudio' });
   const converted_folder = path.join(path.resolve('./'), `store/audio`);
   if (!fs.existsSync(converted_folder)) {
-    fs.mkdirSync(converted_folder);
+    fs.mkdirSync(converted_folder, { recursive: true });
   }
   const meta = info['player_response']['videoDetails'];
   const storage_location = path.join(converted_folder, `${meta['videoId']}.m4a`);
