@@ -35,7 +35,7 @@ async function convertToText(location, videoId) {
   return {
     fullText,
     summarizedText,
-    taggedText
+    taggedText,
   };
 }
 
@@ -56,11 +56,24 @@ export const converToSummarizedText = async (link) => {
   return new Promise((resolve, reject) => {
     fileStream.on('close', async () => {
       const textObj = await convertToText(storage_location, meta['videoId']);
-      resolve(textObj)
+      resolve(textObj);
       fs.unlink(storage_location, (err) => {
-        if (err) throw err
-        console.log(`${storage_location} file has been deleted`)
-      })
+        if (err) throw err;
+        console.log(`${storage_location} file has been deleted`);
+      });
+    });
+  });
+};
+
+export const createTextFromUploadedVideo = async (filename) => {
+  return new Promise(async (resolve, reject) => {
+    const converted_folder = path.join(path.resolve('./'), `store/video`);
+    const storage_location = path.join(converted_folder, filename);
+    const textObj = await convertToText(storage_location, filename);
+    resolve(textObj);
+    fs.unlink(storage_location, (err) => {
+      if (err) throw err;
+      console.log(`${storage_location} file has been deleted`);
     });
   });
 };
