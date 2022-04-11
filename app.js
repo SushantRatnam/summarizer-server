@@ -4,6 +4,8 @@ import morgan from 'morgan';
 import 'dotenv/config';
 import { converToSummarizedText, createTextFromUploadedVideo } from './utils.js';
 import multer from 'multer';
+import path from 'path';
+import * as fs from 'fs';
 
 //app config
 const app = express();
@@ -18,7 +20,11 @@ const PORT = process.env.PORT || 4000;
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, './store/video');
+    const converted_folder = path.join(path.resolve('./'), `store/video`);
+    if (!fs.existsSync(converted_folder)) {
+      fs.mkdirSync(converted_folder, { recursive: true });
+    }
+    cb(null, converted_folder);
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname);

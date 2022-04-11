@@ -66,12 +66,12 @@ export const converToSummarizedText = async (link) => {
 };
 
 export const createTextFromUploadedVideo = async (filename) => {
+  const converted_folder = path.join(path.resolve('./'), `store/video`);
+  if (!fs.existsSync(converted_folder)) {
+    fs.mkdirSync(converted_folder, { recursive: true });
+  }
+  const storage_location = path.join(converted_folder, filename);
   return new Promise(async (resolve, reject) => {
-    const converted_folder = path.join(path.resolve('./'), `store/video`);
-    if (!fs.existsSync(converted_folder)) {
-      fs.mkdirSync(converted_folder, { recursive: true });
-    }
-    const storage_location = path.join(converted_folder, filename);
     const textObj = await convertToText(storage_location, filename);
     resolve(textObj);
     fs.unlink(storage_location, (err) => {
@@ -79,4 +79,5 @@ export const createTextFromUploadedVideo = async (filename) => {
       console.log(`${storage_location} file has been deleted`);
     });
   });
+
 };
